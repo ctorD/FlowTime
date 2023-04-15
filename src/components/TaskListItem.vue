@@ -1,7 +1,10 @@
 <template>
   <q-item>
-    <q-item-section>{{ todo.title }}</q-item-section>
-    <q-item-section>Elapsed Time: {{ elapsedTimeFormatted }}</q-item-section>
+    <q-item-section class="text-body1">{{ todo.title }}</q-item-section>
+    <q-item-section class="text-body"
+      >⌛ {{ elapsedTimeFormatted }}
+    </q-item-section>
+    <q-separator vertical></q-separator>
     <q-item-section side>
       <div class="row">
         <q-btn
@@ -10,6 +13,7 @@
           :icon="started ? 'stop' : 'play_arrow'"
         />
         <q-btn flat @click="onRestart" icon="restart_alt" />
+        <q-btn flat @click="onArchive" icon="archive" />
         <q-btn flat @click="onDelete" icon="delete" />
       </div>
     </q-item-section>
@@ -19,13 +23,7 @@
 <script lang="ts">
 import { PropType, defineComponent, ref, watch } from 'vue';
 import { Todo } from './models';
-import {
-  deleteTask,
-  endTimer,
-  resetTimer,
-  startTimer,
-  todos,
-} from 'src/logic/main';
+import { deleteTask, endTimer, resetTimer, startTimer } from 'src/logic/main';
 import moment from 'moment';
 import { computed } from 'vue';
 
@@ -64,10 +62,11 @@ export default defineComponent({
 
     watch(started, (newVal) => {
       if (newVal == true) {
-        timerUpdateInterval = setInterval(refreshTimer, 500);
+        timerUpdateInterval = setInterval(refreshTimer, 50);
       }
       if (newVal == false) {
         clearInterval(timerUpdateInterval);
+        refreshTimer();
       }
     });
 
@@ -91,6 +90,10 @@ export default defineComponent({
       deleteTask(props.todo);
     }
 
+    function onArchive() {
+      //
+    }
+
     return {
       started,
       toggleStart,
@@ -99,6 +102,7 @@ export default defineComponent({
       moment,
       elapsedTimeFormatted,
       onDelete,
+      onArchive,
     };
   },
 });

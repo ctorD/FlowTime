@@ -21,6 +21,7 @@ export function startTimer(todo: Todo) {
       return td;
     });
   }
+  cache();
 }
 export function endTimer(todo: Todo) {
   todos.value = todos.value.map((td) => {
@@ -29,6 +30,7 @@ export function endTimer(todo: Todo) {
     }
     return td;
   });
+  cache();
 }
 
 export function resetTimer(todo: Todo) {
@@ -39,6 +41,7 @@ export function resetTimer(todo: Todo) {
     }
     return td;
   });
+  cache();
 }
 
 export function addTask(title: string) {
@@ -49,11 +52,27 @@ export function addTask(title: string) {
     startTime: undefined,
     endTime: undefined,
   });
+  cache();
 }
 
 export function deleteTask(todo: Todo) {
   const index = todos.value.indexOf(todo, 0);
   if (index > -1) {
     todos.value.splice(index, 1);
+  }
+  cache();
+}
+
+function cache() {
+  const stringData = JSON.stringify(todos.value);
+  console.log('caching', stringData);
+  localStorage.setItem('data', stringData);
+}
+
+export function uncache() {
+  const data = localStorage.getItem('data');
+  if (data) {
+    console.log('uncaching', data);
+    todos.value = JSON.parse(data) as Todo[];
   }
 }

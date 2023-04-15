@@ -18,14 +18,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import TaskList from 'src/components/TaskList.vue';
 import AddTaskDialog from 'src/components/tasks/dialogs/AddTaskDialog.vue';
+import { uncache } from 'src/logic/main';
 
 export default defineComponent({
   name: 'IndexPage',
   components: { TaskList, AddTaskDialog },
   setup() {
+    uncache();
     const showAddTaskDialog = ref(false);
     return { showAddTaskDialog };
   },
